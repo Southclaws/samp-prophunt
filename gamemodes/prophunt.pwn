@@ -15,51 +15,99 @@
 #undef MAX_PLAYERS
 #define MAX_PLAYERS	(32)
 
+#include <sscanf2>
+#include <YSI\y_timers> // Y_Less
+#include <YSI\y_iterate>
+#include <YSI\y_hooks>
+#include <formatex> // Slice
+#include <strlib> // Slice
+#include <zcmd> // Slice
+
 native IsValidVehicle(vehicleid);
 
 
 /*==============================================================================
 
-
-	Main
-
+	Global Variables
 
 ==============================================================================*/
 
-#define MAX_PROPS (18)
+
+#define YELLOW						0xFFFF00AA
+
+#define RED							0xE85454AA
+#define GREEN						0x33AA33AA
+#define BLUE						0x33CCFFAA
+
+#define ORANGE						0xFFAA00AA
+#define GREY						0xAFAFAFAA
+#define PINK						0xFFC0CBAA
+#define NAVY						0x000080AA
+#define GOLD						0xB8860BAA
+#define LGREEN						0x00FD4DAA
+#define TEAL						0x008080AA
+#define BROWN						0xA52A2AAA
+#define AQUA						0xF0F8FFAA
+
+#define BLACK						0x000000AA
+#define WHITE						0xFFFFFFAA
+
+
+enum
+{
+	TEAM_SEEKER,
+	TEAM_HIDER
+}
+
 
 new
-	gPropList[MAX_PROPS]=
-	{
-	    1227,
-	    1208,
-	    1224,
-	    1221,
-	    1236,
-	    1299,
-	    1300,
-		1331,
-		1332,
-		1333,
-		1334,
-		1335,
-		1336,
-		1337,
-		1340,
-		1344,
-		1345,
-		1346
-	};
+		gPauseGame,
+		gCurrentMap,
+Text:	gMatchTimerUI;
+
+
+/*==============================================================================
+
+	Modules
+
+==============================================================================*/
+
+
+#include "prophunt\match.pwn"
+#include "prophunt\player.pwn"
+#include "prophunt\map.pwn"
+#include "prophunt\admin.pwn"
+
+
+/*==============================================================================
+
+	Core
+
+==============================================================================*/
+
 
 main()
 {
+	print("\n\n/*==============================================================================\n\n");
+	print("    Southclaw's Prop Hunt\n\n");
+	print("        A gamemode inspired by the popular Team Fortress 2 mod \"PropHunt\"\n");
+	print("        by Darkimmortal.");
+	print("\n\n==============================================================================*/\n\n");
 }
 
 
 public OnGameModeInit()
 {
-
 	AddPlayerClass(0, -2763.2041, 85.0597, 7.5184, 270.0, 0, 0, 0, 0, 0, 0);
+
+	gMatchTimerUI				=TextDrawCreate(430.000000, 10.000000, "00:00");
+	TextDrawAlignment			(gMatchTimerUI, 2);
+	TextDrawBackgroundColor		(gMatchTimerUI, 255);
+	TextDrawFont				(gMatchTimerUI, 1);
+	TextDrawLetterSize			(gMatchTimerUI, 0.400000, 2.000000);
+	TextDrawColor				(gMatchTimerUI, -1);
+	TextDrawSetOutline			(gMatchTimerUI, 1);
+	TextDrawSetProportional		(gMatchTimerUI, 1);
 
 	return 1;
 }
@@ -69,67 +117,3 @@ public OnGameModeExit()
 
 	return 1;
 }
-
-public OnPlayerConnect(playerid)
-{
-
-	return 1;
-}
-
-public OnPlayerSpawn(playerid)
-{
-	SetPlayerWorldBounds(playerid, -2715.92, -2799.01, 147.67, 49.51);
-	
-	SetPlayerAttachedObject(playerid, 0, gPropList[random(sizeof(gPropList))], 1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
-
-	return 1;
-}
-
-public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
-{
-	if(newkeys & KEY_CROUCH)
-	{
-		ApplyAnimation(playerid, "PED", "COWER", 4.0, 0, 1, 1, 1, 100);
-	}
-	if(newkeys & KEY_SPRINT)
-	{
-	    ClearAnimations(playerid);
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
