@@ -94,7 +94,13 @@ RoundStart()
 		ClearAnimations(i);
 
 		if(i != firstseeker)
+		{
 			SpawnPlayerAsHider(i);
+			ShowPlayerNameTagForPlayer(i, firstseeker, 1);
+			SetPlayerMarkerForPlayer(i, firstseeker, 1);
+			ShowPlayerNameTagForPlayer(firstseeker, i, 0);
+			SetPlayerMarkerForPlayer(firstseeker, i, 0);
+		}
 	}
 
 	match_Tick = MAX_ROUND_TIME;
@@ -113,6 +119,12 @@ RoundEnd()
 		SetPlayerHP(i, 100.0);
 		ResetPlayerWeapons(i);
 		RemovePlayerAttachedObject(i, 0);
+
+		if(GetPlayerSpectateTarget(i) != INVALID_PLAYER_ID)
+		{
+			ExitSpectateMode(i);
+			SpawnPlayerAsHider(i);
+		}
 	}
 
 	gCurrentMap++;
@@ -162,10 +174,31 @@ SpawnPlayerAsSeeker(playerid)
 
 	RemovePlayerAttachedObject(playerid, 0);
 
-	GivePlayerWeapon(playerid, 29, 1000000);
+	GivePlayerWeapon(playerid, 24, 1000000);
 
 	Iter_Add(match_Seekers, playerid);
 	Iter_Remove(match_Hiders, playerid);
+}
+
+KickPlayerFromMatch(playerid)
+{
+	SendClientMessage(playerid, YELLOW, " >  Kicked for being out of the map area too long.");
+	EnterSpectateMode(playerid);
+
+	Iter_Remove(match_Seekers, playerid);
+	Iter_Remove(match_Hiders, playerid);
+
+	if(Iter_Count(match_Hiders) == 0)
+	{
+		SendClientMessageToAll(YELLOW, " >  Round ended!");
+		RoundEnd();
+	}
+
+	if(Iter_Count(match_Seekers) == 0)
+	{
+		SendClientMessageToAll(YELLOW, " >  Round ended!");
+		RoundEnd();
+	}
 }
 
 public OnPlayerGiveDamage(playerid, damagedid, Float:amount)

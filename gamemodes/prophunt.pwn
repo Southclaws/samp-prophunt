@@ -15,13 +15,13 @@
 #undef MAX_PLAYERS
 #define MAX_PLAYERS	(32)
 
-#include <sscanf2>
-#include <YSI\y_timers> // Y_Less
+#include <sscanf2>					// By Y_Less:				http://forum.sa-mp.com/showthread.php?t=120356
+#include <YSI\y_timers>				// By Y_Less:				http://forum.sa-mp.com/showthread.php?p=1696956
 #include <YSI\y_iterate>
 #include <YSI\y_hooks>
-#include <formatex> // Slice
-#include <strlib> // Slice
-#include <zcmd> // Slice
+#include <formatex>					// By Slice:				http://forum.sa-mp.com/showthread.php?t=313488
+#include <strlib>					// By Slice:				http://forum.sa-mp.com/showthread.php?t=362764
+#include <zcmd>						// Zeex						http://forum.sa-mp.com/showthread.php?t=91354
 
 native IsValidVehicle(vehicleid);
 
