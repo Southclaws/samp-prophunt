@@ -8,9 +8,6 @@
 ==============================================================================*/
 
 
-#define MAX_OUT_OF_MAP_TIME			(3)
-
-
 enum E_PLAYER_DATA
 {
 			ply_Spawned,
@@ -53,7 +50,7 @@ public OnPlayerConnect(playerid)
 
 	new str[128];
 	format(str, sizeof(str), " >  %P Has joined the game!", playerid);
-	SendClientMessageToAll(GREEN, str);
+	SendClientMessageToAll(COLOUR_GREEN, str);
 
 	TextDrawShowForPlayer(playerid, gMatchTimerUI);
 	SetSpawnInfo(playerid, NO_TEAM, 0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0);
@@ -82,7 +79,7 @@ public OnPlayerDisconnect(playerid, reason)
 {
 	new str[128];
 	format(str, sizeof(str), " >  %P Has left the game!", playerid);
-	SendClientMessageToAll(GREY, str);
+	SendClientMessageToAll(COLOUR_GREY, str);
 
 	if(Iter_Count(Player) == 1)
 	{
@@ -236,7 +233,7 @@ ptask PlayerUpdate[1000](playerid)
 			if(!ply_OutOfMap[playerid])
 			{
 				ply_OutOfMap[playerid] = true;
-				ply_OutOfMapTick[playerid] = MAX_OUT_OF_MAP_TIME;
+				ply_OutOfMapTick[playerid] = gOutOfMapTime;
 			}
 
 			format(str, sizeof(str), "Return To Map Area~n~%d Seconds", ply_OutOfMapTick[playerid]);

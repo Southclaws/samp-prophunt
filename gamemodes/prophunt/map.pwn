@@ -8,10 +8,8 @@
 ==============================================================================*/
 
 
-#define MAX_MAPS				(32)
-#define MAP_INDEX_FILE			"PropHunt/maplist.cfg"
-#define MAP_DIRECTORY			"PropHunt/Maps/"
-#define MAX_PROP_TYPES_PER_MAP	(32)
+// These two must be constant, hence why there is no ini entry.
+#define MAX_MAPS					(32)
 
 
 enum E_MAP_DATA
@@ -19,8 +17,7 @@ enum E_MAP_DATA
 Float:	map_bounds[4],
 Float:	map_hideSpawn[4],
 Float:	map_seekSpawn[4],
-		map_propList[MAX_PROP_TYPES_PER_MAP],
-		map_totalProps
+		map_propSet,
 }
 
 static
@@ -35,11 +32,6 @@ static
 ==============================================================================*/
 
 
-hook OnGameModeInit()
-{
-	LoadMaps();
-}
-
 LoadMaps()
 {
 	new
@@ -52,7 +44,11 @@ LoadMaps()
 		return;
 	}
 
+	print("\nLoading Maps...\n");
+
 	file = fopen(MAP_INDEX_FILE, io_read);
+
+	map_Total = 0;
 
 	while(fread(file, line))
 	{
@@ -83,8 +79,6 @@ LoadMap(mapname[])
 	}
 
 	file = fopen(filename, io_read);
-
-	map_Data[map_Total][map_totalProps] = 0;
 
 	while(fread(file, line))
 	{
@@ -126,12 +120,9 @@ LoadMap(mapname[])
 		}
 
 		// Prop List
-		if(!strcmp(data[0], "prop"))
+		if(!strcmp(data[0], "prop-set"))
 		{
-			if(!sscanf(data[1], "d", map_Data[map_Total][map_propList][map_Data[map_Total][map_totalProps]]))
-			{
-				map_Data[map_Total][map_totalProps]++;
-			}
+			map_Data[map_Total][map_propSet] = GetPropSetID(data[1]);
 		}
 
 		// Objects
@@ -139,20 +130,16 @@ LoadMap(mapname[])
 		//print(line);
 	}
 
-/*
-	printf("Map Boundaries: %f, %f, %f, %f", map_Data[map_Total][map_bounds][0], map_Data[map_Total][map_bounds][1], map_Data[map_Total][map_bounds][2], map_Data[map_Total][map_bounds][3]);
-	printf("Hide Spawn: %f, %f, %f, %f", map_Data[map_Total][map_hideSpawn][0], map_Data[map_Total][map_hideSpawn][1], map_Data[map_Total][map_hideSpawn][2], map_Data[map_Total][map_hideSpawn][3]);
-	printf("Seek Spawn: %f, %f, %f, %f", map_Data[map_Total][map_seekSpawn][0], map_Data[map_Total][map_seekSpawn][1], map_Data[map_Total][map_seekSpawn][2], map_Data[map_Total][map_seekSpawn][3]);
-
-	for(new i; i < map_Data[map_Total][map_totalProps]; i++)
-		printf("Prop%d: %d", i, map_Data[map_Total][map_propList][i]);
-*/
-
 	fclose(file);
-	printf("Loaded Map (%d): '%s'", map_Total, mapname);
+	printf("\tLoaded Map (%d): '%s' propset: %d", map_Total, mapname, map_Data[map_Total][map_propSet]);
 	map_Total++;
 
 	return 1;
+}
+
+ReloadMaps()
+{
+	LoadMaps();
 }
 
 
@@ -187,19 +174,12 @@ stock GetSeekerSpawn(&Float:x, &Float:y, &Float:z, &Float:r)
 	r = map_Data[gCurrentMap][map_seekSpawn][3];
 }
 
-stock GetRandomProp()
+GetCurrentPropSet()
 {
-	return map_Data[gCurrentMap][map_propList][random(map_Data[gCurrentMap][map_totalProps])];
+	return map_Data[gCurrentMap][map_propSet];
 }
 
 stock GetTotalMaps()
 {
 	return map_Total;
-}
-
-stock ReloadMaps()
-{
-	print("Reloading Maps");
-	map_Total = 0;
-	LoadMaps();
 }

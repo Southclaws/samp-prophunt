@@ -8,10 +8,6 @@
 ==============================================================================*/
 
 
-#define MAX_PROP_TYPES	(18)
-#define MAX_ROUND_TIME	60//(300)
-#define MAX_LOBBY_TIME	10//(30)
-
 enum
 {
 			MATCH_STATE_LOBBY,
@@ -34,7 +30,7 @@ Iterator:	match_Seekers<MAX_PLAYERS>;
 
 hook OnGameModeInit()
 {
-	match_Tick = MAX_LOBBY_TIME;
+	match_Tick = gLobbyTime;
 }
 
 task MatchUpdate[1000]()
@@ -103,7 +99,7 @@ RoundStart()
 		}
 	}
 
-	match_Tick = MAX_ROUND_TIME;
+	match_Tick = gRoundTime;
 	match_State = MATCH_STATE_RUNNING;
 }
 
@@ -112,7 +108,7 @@ RoundEnd()
 	GameTextForAll("~r~Round End", 1000, 5);
 
 	if(Iter_Count(match_Hiders) > 0)
-		SendClientMessageToAll(YELLOW, " >  Hiders Win!");
+		SendClientMessageToAll(COLOUR_YELLOW, " >  Hiders Win!");
 
 	foreach(new i : Player)
 	{
@@ -132,7 +128,7 @@ RoundEnd()
 	if(gCurrentMap >= GetTotalMaps())
 		gCurrentMap = 0;
 
-	match_Tick = MAX_LOBBY_TIME;
+	match_Tick = gLobbyTime;
 	match_State = MATCH_STATE_LOBBY;
 }
 
@@ -142,17 +138,37 @@ SpawnPlayerAsHider(playerid)
 		Float:x,
 		Float:y,
 		Float:z,
-		Float:r;
+		Float:r,
+		propsetid,
+		propid,
+		model,
+		Float:offsetx,
+		Float:offsety,
+		Float:offsetz,
+		Float:rotx,
+		Float:roty,
+		Float:rotz,
+		Float:scalex,
+		Float:scaley,
+		Float:scalez;
 
 	GetHiderSpawn(x, y, z, r);
+	propsetid = GetCurrentPropSet();
+	propid = GetRandomPropFromSet(propsetid);
+	model = GetPropModel(propid);
+	GetPropOffset(propid, offsetx, offsety, offsetz);
+	GetPropRotation(propid, rotx, roty, rotz);
+	GetPropScale(propid, scalex, scaley, scalez);
+
+	printf("set: %d prop: %d model: %d offsets: %f %f %f", propsetid, propid, model, offsetx, offsety, offsetz);
 
 	SetPlayerTeam(playerid, TEAM_HIDER);
 	SetPlayerPos(playerid, x, y, z);
 	SetPlayerFacingAngle(playerid, r);
-
-	SetPlayerAttachedObject(playerid, 0, GetRandomProp(), 1, 0.239000, 0.011000, 0.004000,  97.600036, 40.200016, 109.399894, 1.0, 1.0, 1.0);
+	SetPlayerAttachedObject(playerid, 0, model, 1, offsetx, offsety, offsetz, rotx, roty, rotz, scalex, scaley, scalez);
 
 	GivePlayerWeapon(playerid, 8, 1000000);
+	ClearAnimations(playerid);
 
 	Iter_Add(match_Hiders, playerid);
 	Iter_Remove(match_Seekers, playerid);
@@ -171,10 +187,10 @@ SpawnPlayerAsSeeker(playerid)
 	SetPlayerTeam(playerid, TEAM_SEEKER);
 	SetPlayerPos(playerid, x, y, z);
 	SetPlayerFacingAngle(playerid, r);
-
 	RemovePlayerAttachedObject(playerid, 0);
 
-	GivePlayerWeapon(playerid, 24, 1000000);
+	GivePlayerWeapon(playerid, 33, 1000000);
+	ClearAnimations(playerid);
 
 	Iter_Add(match_Seekers, playerid);
 	Iter_Remove(match_Hiders, playerid);
@@ -182,7 +198,7 @@ SpawnPlayerAsSeeker(playerid)
 
 KickPlayerFromMatch(playerid)
 {
-	SendClientMessage(playerid, YELLOW, " >  Kicked for being out of the map area too long.");
+	SendClientMessage(playerid, COLOUR_YELLOW, " >  Kicked for being out of the map area too long.");
 	EnterSpectateMode(playerid);
 
 	Iter_Remove(match_Seekers, playerid);
@@ -190,13 +206,13 @@ KickPlayerFromMatch(playerid)
 
 	if(Iter_Count(match_Hiders) == 0)
 	{
-		SendClientMessageToAll(YELLOW, " >  Round ended!");
+		SendClientMessageToAll(COLOUR_YELLOW, " >  Round ended!");
 		RoundEnd();
 	}
 
 	if(Iter_Count(match_Seekers) == 0)
 	{
-		SendClientMessageToAll(YELLOW, " >  Round ended!");
+		SendClientMessageToAll(COLOUR_YELLOW, " >  Round ended!");
 		RoundEnd();
 	}
 }
@@ -217,7 +233,7 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount)
 
 				if(Iter_Count(match_Hiders) == 0)
 				{
-					SendClientMessageToAll(YELLOW, " >  Seekers Win!");
+					SendClientMessageToAll(COLOUR_YELLOW, " >  Seekers Win!");
 					RoundEnd();
 				}
 			}
