@@ -1,84 +1,96 @@
-hook OnPlayerConnect(playerid)
-{
-	SetCommandPermissions(playerid, false);
-}
+#define CMD:%1(%2)		forward cmd_%1(%2);\
+						public cmd_%1(%2)
 
-public OnRconLoginAttempt(ip[], password[], success)
-{
-	new playerip[16];
+#define ACMD:%1(%2)		forward acmd_%1(%2);\
+						public acmd_%1(%2)
 
-	foreach(new i : Player)
+
+/*==============================================================================
+
+	Command processing
+
+==============================================================================*/
+
+
+public OnPlayerCommandText(playerid, cmdtext[])
+{
+	new
+		cmd[30],
+		params[127],
+		cmdfunction[64],
+		result = 1;
+
+	printf("[cmds] [%p]: %s", playerid, cmdtext);
+
+	sscanf(cmdtext, "s[30]s[127]", cmd, params);
+
+	for (new i, j = strlen(cmd); i < j; i++)
+		cmd[i] = tolower(cmd[i]);
+
+	format(cmdfunction, 64, "cmd_%s", cmd[1]);
+
+	if(funcidx(cmdfunction) == -1)
 	{
-		GetPlayerIp(i, playerip, 16);
-
-		if(!isnull(playerip) && !strcmp(ip, playerip))
+		if(IsPlayerAdmin(playerid))
 		{
-			SetCommandPermissions(i, true);
-			break;
+			format(cmdfunction, 64, "acmd_%s", cmd[1]);
+			result = 1;
+		}
+		else
+		{
+			return 0;
 		}
 	}
-}
 
-SetCommandPermissions(playerid, bool:toggle)
-{
-	Command_SetPlayerNamed("commands", playerid, toggle);
-	Command_SetPlayerNamed("reloadmaps", playerid, toggle);
-	Command_SetPlayerNamed("reloadprops", playerid, toggle);
-	Command_SetPlayerNamed("restart", playerid, toggle);
-	Command_SetPlayerNamed("pause", playerid, toggle);
-	Command_SetPlayerNamed("setroundtime", playerid, toggle);
-	Command_SetPlayerNamed("setlobbytime", playerid, toggle);
-	Command_SetPlayerNamed("setboundslimit", playerid, toggle);
-	Command_SetPlayerNamed("spawnashider", playerid, toggle);
-	Command_SetPlayerNamed("spawnasseeker", playerid, toggle);
-}
-
-YCMD:commands(playerid, params[], help)
-{
-	if(help)
+	if(result == 1)
 	{
-		SendClientMessage(playerid, COLOUR_YELLOW, " >  Lists all the commands a player can use.");
-	}
-	else
-	{
-		new count = Command_GetPlayerCommandCount(playerid);
+		if(isnull(params))
+			result = CallLocalFunction(cmdfunction, "is", playerid, "\1");
 
-		for(new i; i != count; ++i)
-			SendClientMessage(playerid, COLOUR_YELLOW, Command_GetNext(i, playerid));
+		else
+			result = CallLocalFunction(cmdfunction, "is", playerid, params);
 	}
 
-	return 1;
+	return result;
 }
 
-YCMD:reloadmaps(playerid, params[], help)
+
+/*==============================================================================
+
+	Admin commands
+
+==============================================================================*/
+
+
+ACMD:reloadmaps(playerid, params[], help)
 {
 	ReloadMaps();
 
 	return 1;
 }
 
-YCMD:reloadprops(playerid, params[], help)
+ACMD:reloadprops(playerid, params[], help)
 {
 	ReloadPropSets();
 
 	return 1;
 }
 
-YCMD:restart(playerid, params[], help)
+ACMD:restart(playerid, params[], help)
 {
 	SendRconCommand("gmx");
 
 	return 1;
 }
 
-YCMD:pause(playerid, params[], help)
+ACMD:pause(playerid, params[], help)
 {
 	gPauseGame = !gPauseGame;
 
 	return 1;
 }
 
-YCMD:setroundtime(playerid, params[], help)
+ACMD:setroundtime(playerid, params[], help)
 {
 	gRoundTime = strval(params);
 	SendClientMessage(playerid, COLOUR_YELLOW, " >  Round time updated");
@@ -86,7 +98,7 @@ YCMD:setroundtime(playerid, params[], help)
 	return 1;
 }
 
-YCMD:setlobbytime(playerid, params[], help)
+ACMD:setlobbytime(playerid, params[], help)
 {
 	gLobbyTime = strval(params);
 	SendClientMessage(playerid, COLOUR_YELLOW, " >  Lobby time updated");
@@ -94,7 +106,7 @@ YCMD:setlobbytime(playerid, params[], help)
 	return 1;
 }
 
-YCMD:setboundslimit(playerid, params[], help)
+ACMD:setboundslimit(playerid, params[], help)
 {
 	gOutOfMapTime = strval(params);
 	SendClientMessage(playerid, COLOUR_YELLOW, " >  Out-of-bounds limit updated");
@@ -102,16 +114,37 @@ YCMD:setboundslimit(playerid, params[], help)
 	return 1;
 }
 
-YCMD:spawnashider(playerid, params[], help)
+ACMD:spawnashider(playerid, params[], help)
 {
 	SpawnPlayerAsHider(playerid);
 
 	return 1;
 }
 
-YCMD:spawnasseeker(playerid, params[], help)
+ACMD:spawnasseeker(playerid, params[], help)
 {
 	SpawnPlayerAsSeeker(playerid);
+
+	return 1;
+}
+
+
+/*==============================================================================
+
+	Regular commands
+
+==============================================================================*/
+
+
+CMD:credits(playerid, params[], help)
+{
+	SendClientMessage(playerid, COLOUR_YELLOW, "");
+	SendClientMessage(playerid, COLOUR_YELLOW, " >  Server Credits:");
+	SendClientMessage(playerid, COLOUR_YELLOW, " >  "EMBED_BLUE"Darkimmortal - "EMBED_GREEN"Original PropHunt idea for TF2");
+	SendClientMessage(playerid, COLOUR_YELLOW, " >  "EMBED_BLUE"Southclaw - "EMBED_GREEN"SA:MP Version of PropHunt");
+	SendClientMessage(playerid, COLOUR_YELLOW, " >  "EMBED_BLUE"Y_Less - "EMBED_GREEN"YSI Library, sscanf plugin");
+	SendClientMessage(playerid, COLOUR_YELLOW, " >  "EMBED_BLUE"Slice - "EMBED_GREEN"formatex library, strlib library");
+	SendClientMessage(playerid, COLOUR_YELLOW, "");
 
 	return 1;
 }

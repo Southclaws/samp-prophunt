@@ -123,6 +123,9 @@ public OnPlayerSpawn(playerid)
 
 			SetPlayerPos(playerid, x, y, z);
 			SetPlayerFacingAngle(playerid, r);
+			TogglePlayerSpectating(playerid, false);
+			TogglePlayerControllable(playerid, true);
+			SetCameraBehindPlayer(playerid);
 		}
 		else
 		{

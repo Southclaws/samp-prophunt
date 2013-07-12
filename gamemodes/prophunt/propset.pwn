@@ -16,11 +16,13 @@
 enum E_PROPSET_DATA
 {
 		propset_name[MAX_PROP_SET_NAME],
+		propset_animLibrary[32],
+		propset_animName[32],
 		propset_size,
 		propset_props[MAX_PROPS_PER_SET]
 }
 
-new
+static
 		propset_Data[MAX_PROP_SETS][E_PROPSET_DATA],
 		propset_Total;
 
@@ -40,8 +42,8 @@ LoadPropSets()
 
 	if(!fexist(PROP_INDEX_FILE))
 	{
-		print("ERROR: Prop index file not found.");
-		return;
+		print("ERROR: Prop index file not found.\n");
+		return 0;
 	}
 
 	print("\nLoading Props...\n");
@@ -57,6 +59,14 @@ LoadPropSets()
 	}
 
 	fclose(file);
+
+	if(propset_Total == 0)
+	{
+		printf("ERROR: No propsets loaded.\n");
+		return 0;
+	}
+
+	return 1;
 }
 
 LoadPropSet(propsetname[MAX_PROP_SET_NAME])
@@ -76,7 +86,7 @@ LoadPropSet(propsetname[MAX_PROP_SET_NAME])
 		Float:scaley,
 		Float:scalez;
 
-	format(filename, sizeof(filename), ""#PROP_DIRECTORY"%s", propsetname);
+	format(filename, sizeof(filename), ""PROP_DIRECTORY"%s", propsetname);
 
 	if(!fexist(filename))
 	{
@@ -89,6 +99,17 @@ LoadPropSet(propsetname[MAX_PROP_SET_NAME])
 	propset_Data[propset_Total][propset_name] = propsetname;
 	propset_Data[propset_Total][propset_size] = 0;
 
+	// Load the animation for the propset (library and animation name pair, space separated)
+	fread(file, line);
+	strtrim(line, "\r\n");
+	if(sscanf(line, "p</>s[32]s[32]", propset_Data[propset_Total][propset_animLibrary], propset_Data[propset_Total][propset_animName]))
+	{
+		printf("ERROR: Loading animation data from line 1 of '%s'", filename);
+		print("Please place an animation library and animation name separated by a / character on line 1 of the file.");
+		return 1;
+	}
+
+	// Load each line after the animation data, parse for attachment model, offset, rotation and scale data
 	while(fread(file, line))
 	{
 		if(!sscanf(line, "p<,>dfffffffff", model, offsetx, offsety, offsetz, rotx, roty, rotz, scalex, scaley, scalez))
@@ -103,7 +124,7 @@ LoadPropSet(propsetname[MAX_PROP_SET_NAME])
 	}
 
 	fclose(file);
-	printf("\tLoaded Propset (%d): '%s' size: %d", propset_Total, propsetname, propset_Data[propset_Total][propset_size]);
+	printf("\tLoaded Propset (%d): '%s' size: %d Animation: '%s/%s'", propset_Total, propsetname, propset_Data[propset_Total][propset_size], propset_Data[propset_Total][propset_animLibrary], propset_Data[propset_Total][propset_animName]);
 	propset_Total++;
 
 	return 1;
@@ -158,4 +179,9 @@ stock GetRandomPropFromSet(propsetid)
 		return 0;
 
 	return propset_Data[propsetid][propset_props][random(propset_Data[propsetid][propset_size])];
+}
+
+stock GetTotalProps()
+{
+	return propset_Total;
 }

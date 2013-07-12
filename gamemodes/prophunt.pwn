@@ -20,7 +20,6 @@
 #include <YSI\y_iterate>
 #include <YSI\y_hooks>
 #include <YSI\y_ini>
-#include <YSI\y_commands>
 #include <formatex>					// By Slice:				http://forum.sa-mp.com/showthread.php?t=313488
 #include <strlib>					// By Slice:				http://forum.sa-mp.com/showthread.php?t=362764
 
@@ -47,6 +46,13 @@ native IsValidVehicle(vehicleid);
 #define COLOUR_ORANGE				0xFFAA00AA
 #define COLOUR_GREY					0xAFAFAFAA
 
+#define EMBED_YELLOW				"{FFFF00}"
+#define EMBED_RED					"{E85454}"
+#define EMBED_GREEN					"{33AA33}"
+#define EMBED_BLUE					"{33CCFF}"
+#define EMBED_ORANGE				"{FFAA00}"
+#define EMBED_GREY					"{AFAFAF}"
+
 
 enum
 {
@@ -63,6 +69,11 @@ new
 		gPauseGame,
 		gCurrentMap,
 Text:	gMatchTimerUI;
+
+
+forward OnRoundStart();
+forward OnRoundEnd(winningteam);
+forward OnPlayerKill(playerid, targetid);
 
 
 /*==============================================================================
@@ -111,9 +122,14 @@ public OnGameModeInit()
 	TextDrawSetOutline			(gMatchTimerUI, 1);
 	TextDrawSetProportional		(gMatchTimerUI, 1);
 
-	LoadPropSets();
-	LoadMaps();
-	LoadSettings();
+	if(!LoadPropSets())
+		return 0;
+
+	if(!LoadMaps())
+		return 0;
+
+	if(!LoadSettings())
+		return 0;
 
 	return 1;
 }
@@ -127,7 +143,10 @@ public OnGameModeExit()
 LoadSettings()
 {
 	if(!fexist(SETTINGS_FILE))
-		print("ERROR: Settings file '"SETTINGS_FILE"' not found.");
+	{
+		print("ERROR: Settings file '"SETTINGS_FILE"' not found.\n");
+		return 0;
+	}
 
 	INI_Load(SETTINGS_FILE);
 
@@ -135,6 +154,8 @@ LoadSettings()
 	printf("\tRound Time: %d", gRoundTime);
 	printf("\tLobby Time: %d", gLobbyTime);
 	printf("\tOut-of-Bounds Limit: %d", gOutOfMapTime);
+
+	return 1;
 }
 
 INI:settings[](name[], value[])

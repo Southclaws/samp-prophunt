@@ -11,7 +11,20 @@
 ==============================================================================*/
 
 
-// TODO:
-// OnRoundStart
-// OnRoundEnd
-// OnPlayerKill
+#include <YSI\y_hooks>
+
+
+public OnRoundStart()
+{
+	return 1;
+}
+
+public OnRoundEnd(winningteam)
+{
+	return 1;
+}
+
+public OnPlayerKill(playerid, targetid)
+{
+	return 1;
+}

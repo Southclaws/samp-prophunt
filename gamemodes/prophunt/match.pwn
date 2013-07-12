@@ -31,6 +31,7 @@ Iterator:	match_Seekers<MAX_PLAYERS>;
 hook OnGameModeInit()
 {
 	match_Tick = gLobbyTime;
+	match_State = MATCH_STATE_LOBBY;
 }
 
 task MatchUpdate[1000]()
@@ -101,14 +102,30 @@ RoundStart()
 
 	match_Tick = gRoundTime;
 	match_State = MATCH_STATE_RUNNING;
+
+	CallRemoteFunction("OnRoundStart", "");
 }
 
 RoundEnd()
 {
-	GameTextForAll("~r~Round End", 1000, 5);
+	new winningteam;
 
 	if(Iter_Count(match_Hiders) > 0)
+	{
 		SendClientMessageToAll(COLOUR_YELLOW, " >  Hiders Win!");
+		winningteam = TEAM_HIDER;
+	}
+
+	if(Iter_Count(match_Seekers) > 0)
+	{
+		SendClientMessageToAll(COLOUR_YELLOW, " >  Seekers Win!");
+		winningteam = TEAM_SEEKER;
+	}
+
+	Iter_Clear(match_Hiders);
+	Iter_Clear(match_Seekers);
+
+	GameTextForAll("~r~Round End", 1000, 5);
 
 	foreach(new i : Player)
 	{
@@ -130,6 +147,8 @@ RoundEnd()
 
 	match_Tick = gLobbyTime;
 	match_State = MATCH_STATE_LOBBY;
+
+	CallRemoteFunction("OnRoundEnd", "d", winningteam);
 }
 
 SpawnPlayerAsHider(playerid)
@@ -226,6 +245,8 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount)
 
 		if(GetPlayerHP(damagedid) <= 0.0)
 		{
+			CallRemoteFunction("OnPlayerKill", "dd", playerid, damagedid);
+
 			if(GetPlayerTeam(playerid) == TEAM_SEEKER)
 			{
 				SpawnPlayer(damagedid);
@@ -233,7 +254,6 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount)
 
 				if(Iter_Count(match_Hiders) == 0)
 				{
-					SendClientMessageToAll(COLOUR_YELLOW, " >  Seekers Win!");
 					RoundEnd();
 				}
 			}
@@ -264,10 +284,4 @@ stock GetMatchState()
 stock GetMatchTick()
 {
 	return match_Tick;
-}
-
-CMD:startmatch(playerid, params[])
-{
-	RoundStart();
-	return 1;
 }

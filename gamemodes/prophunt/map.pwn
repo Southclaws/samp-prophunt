@@ -40,8 +40,8 @@ LoadMaps()
 
 	if(!fexist(MAP_INDEX_FILE))
 	{
-		print("ERROR: Map index file not found.");
-		return;
+		print("ERROR: Map index file not found.\n");
+		return 0;
 	}
 
 	print("\nLoading Maps...\n");
@@ -57,6 +57,14 @@ LoadMaps()
 	}
 
 	fclose(file);
+
+	if(map_Total == 0)
+	{
+		printf("ERROR: No maps loaded.\n");
+		return 0;
+	}
+
+	return 1;
 }
 
 LoadMap(mapname[])
