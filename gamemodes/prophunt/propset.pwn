@@ -185,3 +185,14 @@ stock GetTotalProps()
 {
 	return propset_Total;
 }
+
+stock GetPropsetAnimData(propsetid, lib[], name[])
+{
+	lib[0] = EOS;
+	name[0] = EOS;
+
+	strcat(lib, propset_Data[propsetid][propset_animLibrary], 32);
+	strcat(name, propset_Data[propsetid][propset_animName], 32);
+
+	return 1;
+}

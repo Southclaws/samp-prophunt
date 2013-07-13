@@ -145,11 +145,18 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	{
 		if(oldkeys & KEY_CROUCH)
 		{
+			new
+				lib[32],
+				name[32];
+
+			GetPropsetAnimData(GetCurrentPropSet(), lib, name);
+
+			ApplyAnimation(playerid, lib, name, 4.0, 0, 0, 0, 1, 100);
+		}
+		else
+		{
 			if(GetPlayerAnimationIndex(playerid) == 1068)
 				ClearAnimations(playerid);
-
-			else
-				ApplyAnimation(playerid, "PED", "COWER", 4.0, 0, 0, 0, 1, 100);
 		}
 	}
 
