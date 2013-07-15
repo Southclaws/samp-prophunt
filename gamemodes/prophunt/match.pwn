@@ -106,21 +106,25 @@ RoundStart()
 	CallRemoteFunction("OnRoundStart", "");
 }
 
-RoundEnd()
+RoundEnd(winningteam = -1) // if 'winningteam' = -1, determine the winning team in the function.
 {
-	new winningteam;
-
-	if(Iter_Count(match_Hiders) > 0)
+	if(winningteam == -1)
 	{
+		if(Iter_Count(match_Hiders) > 0)
+			winningteam = TEAM_HIDER;
+
+		if(Iter_Count(match_Seekers) > 0)
+			winningteam = TEAM_SEEKER;
+	}
+
+	if(winningteam == TEAM_HIDER)
 		SendClientMessageToAll(COLOUR_YELLOW, " >  Hiders Win!");
-		winningteam = TEAM_HIDER;
-	}
 
-	if(Iter_Count(match_Seekers) > 0)
-	{
+	else if(winningteam == TEAM_SEEKER)
 		SendClientMessageToAll(COLOUR_YELLOW, " >  Seekers Win!");
-		winningteam = TEAM_SEEKER;
-	}
+
+	else
+		SendClientMessageToAll(COLOUR_YELLOW, " >  No one wins.");
 
 	Iter_Clear(match_Hiders);
 	Iter_Clear(match_Seekers);
@@ -220,9 +224,6 @@ KickPlayerFromMatch(playerid)
 	SendClientMessage(playerid, COLOUR_YELLOW, " >  Kicked for being out of the map area too long.");
 	EnterSpectateMode(playerid);
 
-	Iter_Remove(match_Seekers, playerid);
-	Iter_Remove(match_Hiders, playerid);
-
 	if(Iter_Count(match_Hiders) == 0)
 	{
 		SendClientMessageToAll(COLOUR_YELLOW, " >  Round ended!");
@@ -254,7 +255,7 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount)
 
 				if(Iter_Count(match_Hiders) == 0)
 				{
-					RoundEnd();
+					RoundEnd(TEAM_SEEKER);
 				}
 			}
 			else
@@ -284,4 +285,15 @@ stock GetMatchState()
 stock GetMatchTick()
 {
 	return match_Tick;
+}
+
+stock RemoveFromTeams(playerid)
+{
+	if(!IsPlayerConnected(playerid))
+		return 0;
+
+	Iter_Remove(match_Seekers, playerid);
+	Iter_Remove(match_Hiders, playerid);
+
+	return 1;
 }

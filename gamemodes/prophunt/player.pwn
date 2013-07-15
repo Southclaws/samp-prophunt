@@ -81,6 +81,8 @@ public OnPlayerDisconnect(playerid, reason)
 	format(str, sizeof(str), " >  %P Has left the game!", playerid);
 	SendClientMessageToAll(COLOUR_GREY, str);
 
+	RemoveFromTeams(playerid);
+
 	if(Iter_Count(Player) == 1)
 	{
 		RoundEnd();
@@ -129,6 +131,7 @@ public OnPlayerSpawn(playerid)
 		}
 		else
 		{
+			RemoveFromTeams(playerid);
 			EnterSpectateMode(playerid);
 		}
 	}
@@ -279,6 +282,8 @@ UpdateHealthUI(playerid)
 
 EnterSpectateMode(playerid, targetid = -1)
 {
+	RemoveFromTeams(playerid);
+
 	if(targetid == -1)
 	{
 		new start = playerid;
