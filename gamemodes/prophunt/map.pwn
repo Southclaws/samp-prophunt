@@ -88,6 +88,8 @@ LoadMap(mapname[])
 
 	file = fopen(filename, io_read);
 
+	map_Data[map_Total][map_propSet] = -1;
+
 	while(fread(file, line))
 	{
 		strtrim(line, "\r\n\t");
@@ -131,11 +133,23 @@ LoadMap(mapname[])
 		if(!strcmp(data[0], "prop-set"))
 		{
 			map_Data[map_Total][map_propSet] = GetPropSetID(data[1]);
+
+			if(map_Data[map_Total][map_propSet] == -1)
+			{
+				printf("ERROR: Propset for '%s' defined as '%s' is not a valid propset name.", filename, data[1]);
+				return -1;
+			}
 		}
 
 		// Objects
 
 		//print(line);
+	}
+
+	if(map_Data[map_Total][map_propSet] == -1)
+	{
+		printf("ERROR: Propset definition not found in '%s'.", filename);
+		return -1;
 	}
 
 	fclose(file);

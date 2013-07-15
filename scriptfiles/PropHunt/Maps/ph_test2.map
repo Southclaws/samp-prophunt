@@ -3,25 +3,6 @@
 map-bounds:-2651.51685, -2612.51367, 1327.28955, 1384.20886
 hide-spawn:-2644.36499, 1333.75366, 6.89514, -270.0
 seek-spawn:-2618.95313, 1375.09082, 6.89514, 90.0
-
-prop:1227
-prop:1208
-prop:1224
-prop:1221
-prop:1236
-prop:1299
-prop:1300
-prop:1331
-prop:1332
-prop:1333
-prop:1334
-prop:1335
-prop:1336
-prop:1337
-prop:1340
-prop:1344
-prop:1345
-prop:1346
-
+prop-set:street
 
 ; Objects
