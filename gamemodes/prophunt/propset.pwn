@@ -74,7 +74,7 @@ LoadPropSet(propsetname[MAX_PROP_SET_NAME])
 	new
 		filename[64],
 		File:file,
-		line[128],
+		line[256],
 		model,
 		Float:offsetx,
 		Float:offsety,
@@ -99,7 +99,7 @@ LoadPropSet(propsetname[MAX_PROP_SET_NAME])
 	propset_Data[propset_Total][propset_name] = propsetname;
 	propset_Data[propset_Total][propset_size] = 0;
 
-	// Load the animation for the propset (library and animation name pair, space separated)
+	// Load the animation for the propset (library and animation name pair, separated by '\')
 	fread(file, line);
 	strtrim(line, "\r\n");
 	if(sscanf(line, "p</>s[32]s[32]", propset_Data[propset_Total][propset_animLibrary], propset_Data[propset_Total][propset_animName]))
@@ -112,7 +112,7 @@ LoadPropSet(propsetname[MAX_PROP_SET_NAME])
 	// Load each line after the animation data, parse for attachment model, offset, rotation and scale data
 	while(fread(file, line))
 	{
-		if(!sscanf(line, "p<,>dfffffffff", model, offsetx, offsety, offsetz, rotx, roty, rotz, scalex, scaley, scalez))
+		if(!sscanf(line, "p<,>dffffffffp<;>f{S(_)}", model, offsetx, offsety, offsetz, rotx, roty, rotz, scalex, scaley, scalez))
 		{
 			propset_Data[propset_Total][propset_props][propset_Data[propset_Total][propset_size]] = AddProp(model, offsetx, offsety, offsetz, rotx, roty, rotz, scalex, scaley, scalez);
 			propset_Data[propset_Total][propset_size]++;
