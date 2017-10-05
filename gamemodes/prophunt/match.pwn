@@ -17,8 +17,8 @@ enum
 static
 			match_Tick,
 			match_State,
-Iterator:	match_Hiders<MAX_PLAYERS>,
-Iterator:	match_Seekers<MAX_PLAYERS>;
+   Iterator:match_Hiders<MAX_PLAYERS>,
+   Iterator:match_Seekers<MAX_PLAYERS>;
 
 
 /*==============================================================================

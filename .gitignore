@@ -1,0 +1,51 @@
+# SA:MP server related files
+*.dll
+*.exe
+*.amx
+*.RDP
+server_log.txt
+server.cfg
+start.bat
+crashinfo.txt
+announce
+plugins/
+samp-npc
+samp03svr
+logs/
+
+# My private SS resources
+private/
+gamemodes/sss/extensions/
+gamemodes/ScavengeSurvive.tar.gz
+
+# Sublime stuff
+*.sublime-workspace
+
+# stuff no one else needs
+*.lnk
+pyss/data/*.jpg
+build-config.json
+gamemodes/vendor/
+gamemodes/include/
+
+# Python stuff
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+misc/config.json
+*.mmd
+misc/logmarkov.cfg
+
+scriptfiles/geoip.db
+scriptfiles/geoip_city.db
+scriptfiles/SAfull.hmap
+scriptfiles/SAfull.jpg
+scriptfiles/Maps/
+scriptfiles/txmap/
+scriptfiles/logs/
+scriptfiles/data/
+scriptfiles/carmour/
+scriptfiles/.gitignore
+scriptfiles/.git/

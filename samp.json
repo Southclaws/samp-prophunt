@@ -1,0 +1,12 @@
+{
+	"gamemodes": [
+		"prophunt"
+	],
+	"plugins": [
+		"sscanf",
+		"streamer"
+	],
+	"port": 8888,
+	"hostname": "Southclaws' Prop Hunt",
+	"maxplayers": 32
+}
