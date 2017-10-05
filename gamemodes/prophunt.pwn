@@ -62,9 +62,9 @@ enum
 
 
 new
-		gRoundTime,
-		gLobbyTime,
-		gOutOfMapTime,
+		gRoundTime = 300,
+		gLobbyTime = 30,
+		gOutOfMapTime = 3,
 
 		gPauseGame,
 		gCurrentMap,
