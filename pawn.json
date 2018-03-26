@@ -1,0 +1,13 @@
+{
+	"user": "Southclaws",
+	"repo": "samp-prophunt",
+	"entry": "gamemodes/prophunt.pwn",
+	"output": "gamemodes/prophunt.amx",
+	"dependencies": [
+		"sampctl/samp-stdlib",
+		"maddinat0r/sscanf",
+		"pawn-lang/YSI-Includes",
+		"Southclaws/formatex",
+		"oscar-broman/strlib"
+	]
+}

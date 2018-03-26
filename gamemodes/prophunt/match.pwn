@@ -237,38 +237,6 @@ KickPlayerFromMatch(playerid)
 	}
 }
 
-public OnPlayerGiveDamage(playerid, damagedid, Float:amount)
-{
-	if(match_State == MATCH_STATE_RUNNING)
-	{
-		if(GetPlayerTeam(playerid) != GetPlayerTeam(damagedid))
-			SetPlayerHP(damagedid, GetPlayerHP(damagedid) - (amount * 2));
-
-		if(GetPlayerHP(damagedid) <= 0.0)
-		{
-			CallRemoteFunction("OnPlayerKill", "dd", playerid, damagedid);
-
-			if(GetPlayerTeam(playerid) == TEAM_SEEKER)
-			{
-				SpawnPlayer(damagedid);
-				SpawnPlayerAsSeeker(damagedid);
-
-				if(Iter_Count(match_Hiders) == 0)
-				{
-					RoundEnd(TEAM_SEEKER);
-				}
-			}
-			else
-			{
-				SpawnPlayer(damagedid);
-				SpawnPlayerAsHider(damagedid);
-			}
-		}
-	}
-
-	return 1;
-}
-
 
 /*==============================================================================
 
@@ -296,4 +264,14 @@ stock RemoveFromTeams(playerid)
 	Iter_Remove(match_Hiders, playerid);
 
 	return 1;
+}
+
+stock GetTotalHiders()
+{
+	return Iter_Count(match_Hiders);
+}
+
+stock GetTotalSeekers()
+{
+	return Iter_Count(match_Seekers);
 }
