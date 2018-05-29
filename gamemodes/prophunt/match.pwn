@@ -302,3 +302,13 @@ stock RemoveFromTeams(playerid)
 
 	return 1;
 }
+
+stock GetTotalHiders()
+{
+	return Iter_Count(match_Hiders);
+}
+
+stock GetTotalSeekers()
+{
+	return Iter_Count(match_Seekers);
+}

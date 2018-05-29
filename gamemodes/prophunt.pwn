@@ -14,7 +14,7 @@
 #include <a_samp>
 
 #undef MAX_PLAYERS
-#define MAX_PLAYERS	(32)
+#define MAX_PLAYERS (32)
 
 
 // maddinat0r/sscanf
@@ -48,12 +48,12 @@ native IsValidVehicle(vehicleid);
 #define PROP_INDEX_FILE				"PropHunt/propsets"
 #define PROP_DIRECTORY				"PropHunt/Props/"
 
-#define COLOUR_YELLOW				0xFFFF00AA
-#define COLOUR_RED					0xE85454AA
-#define COLOUR_GREEN				0x33AA33AA
-#define COLOUR_BLUE					0x33CCFFAA
-#define COLOUR_ORANGE				0xFFAA00AA
-#define COLOUR_GREY					0xAFAFAFAA
+#define COLOUR_YELLOW				0xFFFF00FF
+#define COLOUR_RED					0xE85454FF
+#define COLOUR_GREEN				0x33AA33FF
+#define COLOUR_BLUE					0x33CCFFFF
+#define COLOUR_ORANGE				0xFFAA00FF
+#define COLOUR_GREY					0xAFAFAFFF
 
 #define EMBED_YELLOW				"{FFFF00}"
 #define EMBED_RED					"{E85454}"
