@@ -10,18 +10,27 @@
 ==============================================================================*/
 
 
+// sampctl/samp-stdlib
 #include <a_samp>
 
 #undef MAX_PLAYERS
 #define MAX_PLAYERS	(32)
 
-#include <sscanf2>					// By Y_Less:				http://forum.sa-mp.com/showthread.php?t=120356
-#include <YSI\y_timers>				// By Y_Less:				http://forum.sa-mp.com/showthread.php?p=1696956
+
+// maddinat0r/sscanf
+#include <sscanf2>
+
+// pawn-lang/YSI-Includes
+#include <YSI\y_timers>
 #include <YSI\y_iterate>
 #include <YSI\y_hooks>
 #include <YSI\y_ini>
-#include <formatex>					// By Slice:				http://forum.sa-mp.com/showthread.php?t=313488
-#include <strlib>					// By Slice:				http://forum.sa-mp.com/showthread.php?t=362764
+
+// Southclaws/formatex
+#include <formatex>
+
+// oscar-broman/strlib
+#include <strlib>
 
 native IsValidVehicle(vehicleid);
 
