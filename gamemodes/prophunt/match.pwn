@@ -241,10 +241,13 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount)
 {
 	if(match_State == MATCH_STATE_RUNNING)
 	{
-		if(GetPlayerTeam(playerid) != GetPlayerTeam(damagedid))
-			SetPlayerHP(damagedid, GetPlayerHP(damagedid) - (amount * 2));
+		if(GetPlayerTeam(playerid) == GetPlayerTeam(damagedid))
+			return 0;
 
-		if(GetPlayerHP(damagedid) <= 0.0)
+		new Float:hp;
+		GetPlayerHP(damagedid, hp);
+
+		if(hp <= 0.0)
 		{
 			CallRemoteFunction("OnPlayerKill", "dd", playerid, damagedid);
 
@@ -264,6 +267,8 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount)
 				SpawnPlayerAsHider(damagedid);
 			}
 		}
+
+		SetPlayerHP(damagedid, hp - (amount * 2));
 	}
 
 	return 1;

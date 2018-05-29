@@ -1,7 +1,7 @@
 /*==============================================================================
 
 
-	Southclaw's Prop Hunt
+	Southclaws' Prop Hunt
 
 		A gamemode inspired by the popular Team Fortress 2 mod "PropHunt"
 		by Darkimmortal.
@@ -102,11 +102,9 @@ forward OnPlayerKill(playerid, targetid);
 
 main()
 {
-	print("\n\n/*==============================================================================\n\n");
-	print("    Southclaw's Prop Hunt\n\n");
-	print("        A gamemode inspired by the popular Team Fortress 2 mod \"PropHunt\"\n");
-	print("        by Darkimmortal.");
-	print("\n\n==============================================================================*/\n\n");
+	print("Southclaws' Prop Hunt\n\n");
+	print("    A gamemode inspired by the popular Team Fortress 2 mod \"PropHunt\"\n");
+	print("    by Darkimmortal.");
 }
 
 public OnGameModeInit()

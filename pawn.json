@@ -1,0 +1,30 @@
+{
+    "user": "Southclaws",
+    "repo": "samp-prophunt",
+    "local": true,
+    "entry": "gamemodes\\prophunt.pwn",
+    "output": "gamemodes\\prophunt.amx",
+    "dependencies": [
+        "sampctl/samp-stdlib",
+        "maddinat0r/sscanf",
+        "Zeex/amx_assembly",
+        "pawn-lang/YSI-Includes",
+        "samp-incognito/samp-streamer-plugin",
+        "Southclaws/formatex",
+        "oscar-broman/strlib"
+    ],
+    "runtimes": [
+        {
+            "name": "dev",
+            "port": 7777,
+            "hostname": "Southclaws' Prop Hunt [DEV]",
+            "maxplayers": 16
+        },
+        {
+            "name": "prod",
+            "port": 7777,
+            "hostname": "Southclaws' Prop Hunt",
+            "maxplayers": 32
+        }
+    ]
+}

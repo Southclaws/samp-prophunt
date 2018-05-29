@@ -343,13 +343,13 @@ ExitSpectateMode(playerid)
 ==============================================================================*/
 
 
-forward Float:GetPlayerHP(playerid);
-Float:GetPlayerHP(playerid)
+GetPlayerHP(playerid, &Float:hp)
 {
 	if(!IsPlayerConnected(playerid))
-		return 0.0;
+		return 0;
 
-	return ply_Data[playerid][ply_Health];
+	hp = ply_Data[playerid][ply_Health];
+	return 1;
 }
 
 SetPlayerHP(playerid, Float:amount)
