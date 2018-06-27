@@ -8,8 +8,6 @@
 ==============================================================================*/
 
 
-forward Float:GetPlayerHP(playerid);
-
 enum E_PLAYER_DATA
 {
 			ply_Spawned,
@@ -140,38 +138,6 @@ public OnPlayerSpawn(playerid)
 
 	SetPlayerHP(playerid, 100.0);
 	ply_Data[playerid][ply_Spawned] = true;
-
-	return 1;
-}
-
-public OnPlayerGiveDamage(playerid, damagedid, Float:amount)
-{
-	if(GetMatchState() == MATCH_STATE_RUNNING)
-	{
-		if(GetPlayerTeam(playerid) != GetPlayerTeam(damagedid))
-			SetPlayerHP(damagedid, GetPlayerHP(damagedid) - (amount * 2));
-
-		if(GetPlayerHP(damagedid) <= 0.0)
-		{
-			CallRemoteFunction("OnPlayerKill", "dd", playerid, damagedid);
-
-			if(GetPlayerTeam(playerid) == TEAM_SEEKER)
-			{
-				SpawnPlayer(damagedid);
-				SpawnPlayerAsSeeker(damagedid);
-
-				if(GetTotalHiders() == 0)
-				{
-					RoundEnd(TEAM_SEEKER);
-				}
-			}
-			else
-			{
-				SpawnPlayer(damagedid);
-				SpawnPlayerAsHider(damagedid);
-			}
-		}
-	}
 
 	return 1;
 }
