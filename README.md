@@ -13,14 +13,10 @@ hiders will win.
 
 ## Usage
 
-Simply download the project:
+Simply grab and run:
 
 ```bash
 sampctl package get Southclaws/samp-prophunt
-```
-
-And simply run as a package:
-
-```bash
+cd samp-prophunt
 sampctl package run
 ```
