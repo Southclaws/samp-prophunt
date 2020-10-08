@@ -15,24 +15,22 @@
 
 #undef MAX_PLAYERS
 #define MAX_PLAYERS (32)
-
+#define YSI_NO_HEAP_MALLOC
 
 // maddinat0r/sscanf
 #include <sscanf2>
 
 // pawn-lang/YSI-Includes
-#include <YSI\y_timers>
-#include <YSI\y_iterate>
-#include <YSI\y_hooks>
-#include <YSI\y_ini>
+#include <YSI_Coding\y_timers>
+#include <YSI_Data\y_iterate>
+#include <YSI_Coding\y_hooks>
+#include <YSI_Storage\y_ini>
 
 // Southclaws/formatex
 #include <formatex>
 
 // oscar-broman/strlib
 #include <strlib>
-
-native IsValidVehicle(vehicleid);
 
 
 /*==============================================================================
