@@ -1,6 +1,3 @@
-#include <YSI_Coding\y_hooks>
-
-
 /*==============================================================================
 
 	Variables
@@ -17,8 +14,10 @@ enum
 static
 			match_Tick,
 			match_State,
-   Iterator:match_Hiders<MAX_PLAYERS>,
-   Iterator:match_Seekers<MAX_PLAYERS>;
+			match_Hiders[MAX_PLAYERS],
+			match_HidersNum,
+			match_Seekers[MAX_PLAYERS],
+			match_SeekersNum;
 
 
 /*==============================================================================
@@ -28,18 +27,21 @@ static
 ==============================================================================*/
 
 
-hook OnGameModeInit()
+InitMatch()
 {
 	match_Tick = gLobbyTime;
 	match_State = MATCH_STATE_LOBBY;
+
+	SetTimer("MatchUpdate", 1000, true);
 }
 
-task MatchUpdate[1000]()
+forward MatchUpdate();
+public MatchUpdate()
 {
 	if(gPauseGame)
 		return;
 
-	if(Iter_Count(Player) < 2)
+	if(GetOnlinePlayers() < 2)
 	{
 		TextDrawSetString(gMatchTimerUI, "Not enough players");
 		return;
@@ -77,14 +79,17 @@ task MatchUpdate[1000]()
 
 RoundStart()
 {
-	new firstseeker = Iter_Random(Player);
+	new firstseeker = match_Seekers[random(match_SeekersNum)];
 
 	SpawnPlayerAsSeeker(firstseeker);
 
 	GameTextForAll("~b~Round Start!", 1000, 5);
 
-	foreach(new i : Player)
+	for(new i; i < MAX_PLAYERS; i++)
 	{
+		if(!IsPlayerConnected(i))
+			continue;
+
 		SetPlayerHP(i, 100.0);
 		SetCameraBehindPlayer(i);
 		TogglePlayerControllable(i, true);
@@ -110,10 +115,10 @@ RoundEnd(winningteam = -1) // if 'winningteam' = -1, determine the winning team 
 {
 	if(winningteam == -1)
 	{
-		if(Iter_Count(match_Hiders) > 0)
+		if(match_HidersNum > 0)
 			winningteam = TEAM_HIDER;
 
-		if(Iter_Count(match_Seekers) > 0)
+		if(match_SeekersNum > 0)
 			winningteam = TEAM_SEEKER;
 	}
 
@@ -126,13 +131,16 @@ RoundEnd(winningteam = -1) // if 'winningteam' = -1, determine the winning team 
 	else
 		SendClientMessageToAll(COLOUR_YELLOW, " >  No one wins.");
 
-	Iter_Clear(match_Hiders);
-	Iter_Clear(match_Seekers);
+	match_HidersNum = 0;
+	match_SeekersNum = 0;
 
 	GameTextForAll("~r~Round End", 1000, 5);
 
-	foreach(new i : Player)
+	for(new i; i < MAX_PLAYERS; i++)
 	{
+		if(!IsPlayerConnected(i))
+			continue;
+
 		SetPlayerHP(i, 100.0);
 		ResetPlayerWeapons(i);
 		RemovePlayerAttachedObject(i, 0);
@@ -193,8 +201,18 @@ SpawnPlayerAsHider(playerid)
 	GivePlayerWeapon(playerid, 8, 1000000);
 	ClearAnimations(playerid);
 
-	Iter_Add(match_Hiders, playerid);
-	Iter_Remove(match_Seekers, playerid);
+	match_Hiders[match_HidersNum++] = playerid;
+	new bool:found = false;
+	for(new i = 0; i < match_SeekersNum; i++) {
+		if(!found) {
+			if(match_Seekers[i] == playerid) {
+				found = true;
+			}
+		} else {
+			match_Seekers[i - 1] = match_Seekers[i];
+			match_Seekers[i] = 0;
+		}
+	}
 }
 
 SpawnPlayerAsSeeker(playerid)
@@ -215,8 +233,18 @@ SpawnPlayerAsSeeker(playerid)
 	GivePlayerWeapon(playerid, 33, 1000000);
 	ClearAnimations(playerid);
 
-	Iter_Add(match_Seekers, playerid);
-	Iter_Remove(match_Hiders, playerid);
+	match_Seekers[match_SeekersNum++] = playerid;
+	new bool:found = false;
+	for(new i = 0; i < match_HidersNum; i++) {
+		if(!found) {
+			if(match_Hiders[i] == playerid) {
+				found = true;
+			}
+		} else {
+			match_Hiders[i - 1] = match_Hiders[i];
+			match_Hiders[i] = 0;
+		}
+	}
 }
 
 KickPlayerFromMatch(playerid)
@@ -224,13 +252,13 @@ KickPlayerFromMatch(playerid)
 	SendClientMessage(playerid, COLOUR_YELLOW, " >  Kicked for being out of the map area too long.");
 	EnterSpectateMode(playerid);
 
-	if(Iter_Count(match_Hiders) == 0)
+	if(match_HidersNum == 0)
 	{
 		SendClientMessageToAll(COLOUR_YELLOW, " >  Round ended!");
 		RoundEnd();
 	}
 
-	if(Iter_Count(match_Seekers) == 0)
+	if(match_SeekersNum == 0)
 	{
 		SendClientMessageToAll(COLOUR_YELLOW, " >  Round ended!");
 		RoundEnd();
@@ -256,7 +284,7 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount)
 				SpawnPlayer(damagedid);
 				SpawnPlayerAsSeeker(damagedid);
 
-				if(Iter_Count(match_Hiders) == 0)
+				if(match_HidersNum == 0)
 				{
 					RoundEnd(TEAM_SEEKER);
 				}
@@ -297,18 +325,39 @@ stock RemoveFromTeams(playerid)
 	if(!IsPlayerConnected(playerid))
 		return 0;
 
-	Iter_Remove(match_Seekers, playerid);
-	Iter_Remove(match_Hiders, playerid);
+	new bool:found = false;
+	for(new i = 0; i < match_HidersNum; i++) {
+		if(!found) {
+			if(match_Hiders[i] == playerid) {
+				found = true;
+			}
+		} else {
+			match_Hiders[i - 1] = match_Hiders[i];
+			match_Hiders[i] = 0;
+		}
+	}
+
+	found = false;
+	for(new i = 0; i < match_SeekersNum; i++) {
+		if(!found) {
+			if(match_Seekers[i] == playerid) {
+				found = true;
+			}
+		} else {
+			match_Seekers[i - 1] = match_Seekers[i];
+			match_Seekers[i] = 0;
+		}
+	}
 
 	return 1;
 }
 
 stock GetTotalHiders()
 {
-	return Iter_Count(match_Hiders);
+	return match_HidersNum;
 }
 
 stock GetTotalSeekers()
 {
-	return Iter_Count(match_Seekers);
+	return match_SeekersNum;
 }

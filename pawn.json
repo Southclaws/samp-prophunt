@@ -7,10 +7,14 @@
     "dependencies": [
         "sampctl/samp-stdlib",
         "maddinat0r/sscanf:v2.8.2",
-        "pawn-lang/YSI-Includes",
-        "Southclaws/formatex",
-        "oscar-broman/strlib"
+        "oscar-broman/strlib",
+        "BigETI/Dini"
     ],
+    "build": {
+        "includes": [
+            "E:/Work/open.mp/open.mp/stdlib"
+        ]
+    },
     "runtimes": [
         {
             "name": "dev",

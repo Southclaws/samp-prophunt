@@ -142,8 +142,6 @@ CMD:credits(playerid, params[], help)
 	SendClientMessage(playerid, COLOUR_YELLOW, " >  Server Credits:");
 	SendClientMessage(playerid, COLOUR_YELLOW, " >  "EMBED_BLUE"Darkimmortal - "EMBED_GREEN"Original PropHunt idea for TF2");
 	SendClientMessage(playerid, COLOUR_YELLOW, " >  "EMBED_BLUE"Southclaw - "EMBED_GREEN"SA:MP Version of PropHunt");
-	SendClientMessage(playerid, COLOUR_YELLOW, " >  "EMBED_BLUE"Y_Less - "EMBED_GREEN"YSI Library, sscanf plugin");
-	SendClientMessage(playerid, COLOUR_YELLOW, " >  "EMBED_BLUE"Slice - "EMBED_GREEN"formatex library, strlib library");
 	SendClientMessage(playerid, COLOUR_YELLOW, "");
 
 	return 1;

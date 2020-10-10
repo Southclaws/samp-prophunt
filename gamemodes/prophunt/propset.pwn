@@ -1,6 +1,3 @@
-#include <YSI_Coding\y_hooks>
-
-
 /*==============================================================================
 
 	Variables
@@ -144,7 +141,7 @@ ReloadPropSets()
 ==============================================================================*/
 
 
-stock GetPropSetID(propsetname[])
+stock GetPropSetID(const propsetname[])
 {
 	if(isnull(propsetname))
 		return -1;

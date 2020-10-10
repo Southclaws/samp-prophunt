@@ -20,17 +20,11 @@
 // maddinat0r/sscanf
 #include <sscanf2>
 
-// pawn-lang/YSI-Includes
-#include <YSI_Coding\y_timers>
-#include <YSI_Data\y_iterate>
-#include <YSI_Coding\y_hooks>
-#include <YSI_Storage\y_ini>
-
-// Southclaws/formatex
-#include <formatex>
-
 // oscar-broman/strlib
 #include <strlib>
+
+// BigETI/Dini
+#include <dini>
 
 
 /*==============================================================================
@@ -136,12 +130,13 @@ public OnGameModeInit()
 	if(!LoadSettings())
 		return 0;
 
+	InitMatch();
+
 	return 1;
 }
 
 public OnGameModeExit()
 {
-
 	return 1;
 }
 
@@ -153,21 +148,14 @@ LoadSettings()
 		return 0;
 	}
 
-	INI_Load(SETTINGS_FILE);
+	gRoundTime = dini_Int(SETTINGS_FILE, "roundtime");
+	gLobbyTime = dini_Int(SETTINGS_FILE, "lobbytime");
+	gOutOfMapTime = dini_Int(SETTINGS_FILE, "outboundslimit");
 
 	print("\nLoading Settings...\n");
 	printf("\tRound Time: %d", gRoundTime);
 	printf("\tLobby Time: %d", gLobbyTime);
 	printf("\tOut-of-Bounds Limit: %d", gOutOfMapTime);
-
-	return 1;
-}
-
-INI:settings[](name[], value[])
-{
-	INI_Int("roundtime", gRoundTime);
-	INI_Int("lobbytime", gLobbyTime);
-	INI_Int("outboundslimit", gOutOfMapTime);
 
 	return 1;
 }

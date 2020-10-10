@@ -1,6 +1,3 @@
-#include <YSI_Coding\y_hooks>
-
-
 /*==============================================================================
 
 	Variables
@@ -104,7 +101,11 @@ LoadMap(mapname[])
 		{
 			if(!strcmp(data[0], "map-bounds"))
 			{
-				sscanf(data[1], "p<,>ffff", map_Data[map_Total][map_bounds][0], map_Data[map_Total][map_bounds][1], map_Data[map_Total][map_bounds][2], map_Data[map_Total][map_bounds][3]);
+				sscanf(data[1], "p<,>ffff",
+					map_Data[map_Total][map_bounds][0],
+					map_Data[map_Total][map_bounds][1],
+					map_Data[map_Total][map_bounds][2],
+					map_Data[map_Total][map_bounds][3]);
 				loaded_bounds = true;
 			}
 		}
@@ -114,7 +115,11 @@ LoadMap(mapname[])
 		{
 			if(!strcmp(data[0], "hide-spawn"))
 			{
-				sscanf(data[1], "p<,>ffff", map_Data[map_Total][map_hideSpawn][0], map_Data[map_Total][map_hideSpawn][1], map_Data[map_Total][map_hideSpawn][2], map_Data[map_Total][map_hideSpawn][3]);
+				sscanf(data[1], "p<,>ffff",
+					map_Data[map_Total][map_hideSpawn][0],
+					map_Data[map_Total][map_hideSpawn][1],
+					map_Data[map_Total][map_hideSpawn][2],
+					map_Data[map_Total][map_hideSpawn][3]);
 				loaded_hidespawn = true;
 			}
 		}
@@ -124,7 +129,11 @@ LoadMap(mapname[])
 		{
 			if(!strcmp(data[0], "seek-spawn"))
 			{
-				sscanf(data[1], "p<,>ffff", map_Data[map_Total][map_seekSpawn][0], map_Data[map_Total][map_seekSpawn][1], map_Data[map_Total][map_seekSpawn][2], map_Data[map_Total][map_seekSpawn][3]);
+				sscanf(data[1], "p<,>ffff",
+					map_Data[map_Total][map_seekSpawn][0],
+					map_Data[map_Total][map_seekSpawn][1],
+					map_Data[map_Total][map_seekSpawn][2],
+					map_Data[map_Total][map_seekSpawn][3]);
 				loaded_seekspawn = true;
 			}
 		}

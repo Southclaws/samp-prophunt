@@ -1,6 +1,3 @@
-#include <YSI_Coding\y_hooks>
-
-
 /*==============================================================================
 
 	Variables
@@ -83,7 +80,7 @@ public OnPlayerDisconnect(playerid, reason)
 
 	RemoveFromTeams(playerid);
 
-	if(Iter_Count(Player) == 1)
+	if(GetOnlinePlayers() == 1)
 	{
 		RoundEnd();
 	}
@@ -219,7 +216,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	}
 }
 
-ptask PlayerUpdate[1000](playerid)
+public OnPlayerUpdate(playerid)
 {
 	if(ply_Data[playerid][ply_Spawned] && ply_Data[playerid][ply_SpectateTarget] == INVALID_PLAYER_ID && GetMatchState() == MATCH_STATE_RUNNING)
 	{
@@ -263,11 +260,6 @@ ptask PlayerUpdate[1000](playerid)
 		}
 	}
 
-	return 1;
-}
-
-public OnPlayerUpdate(playerid)
-{
 	SetPlayerHealth(playerid, 1000.0);
 
 	return 1;
