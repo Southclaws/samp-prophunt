@@ -103,9 +103,9 @@ forward OnPlayerKill(playerid, targetid);
 
 main()
 {
-	print("Southclaws' Prop Hunt\n\n");
-	print("    A gamemode inspired by the popular Team Fortress 2 mod \"PropHunt\"\n");
-	print("    by Darkimmortal.");
+	print("\nSouthclaws' Prop Hunt\n");
+	print("    A gamemode inspired by the popular Team Fortress 2 mod \"PropHunt\"");
+	print("    by Darkimmortal.\n");
 }
 
 public OnGameModeInit()
